@@ -1,6 +1,8 @@
+
 #include "system.h"
 #include "periphs.h"
 #include "iob-uart.h"
+#include "iob-gpio.h"
 #include "printf.h"
 
 char *send_string = "Sending this string as a file to console.\n"
@@ -39,53 +41,28 @@ int compare_str(char *str1, char *str2, int str_size) {
     return 0;
 }
 
-void fibonacci(){
-	int i, cont_0 = 0, cont_1 = 1, sum = 0;
-	
-	for(i=0; i<20; i++){
-		printf("%d ", sum);
-		sum = cont_0 + cont_1;
-		if (i % 2 == 0)
-			cont_1 = sum;
-		else 
-			cont_0 = sum;
- 	}
-	printf("\n");
-}
-
 
 int main()
 {
+
+  uint32_t r=0;
   //init uart
   uart_init(UART_BASE,FREQ/BAUD);
+
 
   //test puts
   uart_puts("\n\n\nHello world!\n\n\n");
 
-  //test printf with floats 
+  //test printf with floats
   printf("Value of Pi = %f\n\n", 3.1415);
-	
-  fibonacci();
-  //test file send
- // char *sendfile = malloc(1000);
- // int send_file_size = 0;
- // send_file_size = string_copy(sendfile, send_string);
- // uart_sendfile("Sendfile.txt", send_file_size, sendfile);
 
-  //test file receive
- // char *recvfile = malloc(10000);
- // int file_size = 0;
- // file_size = uart_recvfile("Sendfile.txt", recvfile);
+  gpio_init(GPIO_BASE);
+  gpio_set_output_enable(16);
 
-  //compare files
- // if (compare_str(sendfile, recvfile, send_file_size)) {
- //     printf("FAILURE: Send and received file differ!\n");
- // } else {
- //     printf("SUCCESS: Send and received file match!\n");
- // }
+  r=gpio_get();
+  printf("Receive: %d \n", r);
+  gpio_set(1);
 
- // free(sendfile);
- // free(recvfile);
 
   uart_finish();
 }
