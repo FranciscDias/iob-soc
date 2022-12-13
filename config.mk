@@ -86,7 +86,7 @@ endif
 PICORV32_DIR=$(ROOT_DIR)/submodules/PICORV32
 CACHE_DIR=$(ROOT_DIR)/submodules/CACHE
 UART_DIR=$(ROOT_DIR)/submodules/UART
-GPIO_DIR=$(ROOT_DIR)/GPIO_test/GPIO
+GPIO_DIR=$(ROOT_DIR)/submodules/GPIO
 LIB_DIR=$(ROOT_DIR)/submodules/LIB
 MEM_DIR=$(ROOT_DIR)/submodules/MEM
 AXI_DIR=$(ROOT_DIR)/submodules/AXI
