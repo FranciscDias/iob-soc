@@ -57,7 +57,11 @@ int main()
   printf("Value of Pi = %f\n\n", 3.1415);
 
   gpio_init(GPIO_BASE);
+<<<<<<< HEAD
   gpio_set_output_enable(1);
+=======
+  gpio_set_output_enable(CA[0]);
+>>>>>>> dfdd2e12157b66397bf9339d267b746dc67bd582
 
   r=gpio_get();
   printf("Receive: %d \n", r);
