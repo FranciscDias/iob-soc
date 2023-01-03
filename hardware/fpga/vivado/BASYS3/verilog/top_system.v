@@ -52,7 +52,7 @@ module top_system(
       .uart_cts      (1'b1),
 
       //GPIO
-      .CA            (CA),
+      .CA            (CA[0]),
       .AN	     (AN)    
       );
 
