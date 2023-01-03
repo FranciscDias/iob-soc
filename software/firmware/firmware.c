@@ -1,4 +1,4 @@
-
+#include <stdio.h>
 #include "system.h"
 #include "periphs.h"
 #include "iob-uart.h"
@@ -42,13 +42,32 @@ int compare_str(char *str1, char *str2, int str_size) {
 }
 
 
+int Detect_Number(int num){
+
+  int cathode, teste;
+
+  uint16_t anode;
+
+  if(1000 <= num)
+  {
+    cathode = num/1000;
+    anode = 0b0000011100000000;
+    teste = anode;
+   
+    return teste;
+  }
+
+}
+
 int main()
 {
 
-  uint32_t r=0;
+  int valor;
+
   //init uart
   uart_init(UART_BASE,FREQ/BAUD);
 
+  gpio_init(GPIO_BASE);
 
   //test puts
   uart_puts("\n\n\nHello world!\n\n\n");
@@ -56,16 +75,16 @@ int main()
   //test printf with floats
   printf("Value of Pi = %f\n\n", 3.1415);
 
-  gpio_init(GPIO_BASE);
-<<<<<<< HEAD
-  gpio_set_output_enable(1);
-=======
-  gpio_set_output_enable(CA[0]);
->>>>>>> dfdd2e12157b66397bf9339d267b746dc67bd582
+//  scanf("%d", &valor);
+	valor = 2190;
 
-  r=gpio_get();
-  printf("Receive: %d \n", r);
+  valor =  Detect_Number(valor);
+ 
+  gpio_set_output_enable(valor);
+
   gpio_set(1);
+
+  printf("valor ==== %d\n", valor);
 
 
   uart_finish();
