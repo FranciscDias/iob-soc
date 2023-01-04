@@ -44,19 +44,34 @@ int compare_str(char *str1, char *str2, int str_size) {
 
 int Detect_Number(int num){
 
-  int cathode, teste;
+  int cathode1, cathode2, cathode3, cathode4, teste;
 
   uint16_t anode;
-
-  if(1000 <= num)
+  cathode1 = num/1000;
+  cathode2 = (num%1000)/100;
+  cathode3 = ((num%1000)%100)/10;
+  cathode4 = ((num%1000)%100)%10;
+  
+  if(1000 <= num <= 9999)
   {
-    cathode = num/1000;
-    anode = 0b0000011100000000;
+    anode = 0b0000000000000000;
     teste = anode;
-   
-    return teste;
+    //return teste;
   }
-
+  if(100 <= num <= 999){
+    anode = 0b0000100000000000;
+    //return anode;
+  }
+  if(10 <= num <= 99){
+    anode = 0b0000110000000000;
+  }
+  if(0 <= num <= 9){
+    anode = 0b0000111000000000;
+  }
+  else{
+    anode = 0b0000111100000000;
+  }
+  
 }
 
 int main()
