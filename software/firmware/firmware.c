@@ -44,40 +44,65 @@ int compare_str(char *str1, char *str2, int str_size) {
 
 int Detect_Number(int num){
 
-  int cathode1, cathode2, cathode3, cathode4, teste;
+  int cathode1, cathode2, cathode3, cathode4, anode1, anode2, anode3, anode4, num1, num2, num3, num4, value;
+  //1- numero mais a esquerda... 4- numero mais a direita
 
-  uint16_t anode;
+  anode1 = 0b0000;
+  anode2 = 0b1000;
+  anode3 = 0b1100;
+  anode4 = 0b1110;
   cathode1 = num/1000;
   cathode2 = (num%1000)/100;
   cathode3 = ((num%1000)%100)/10;
   cathode4 = ((num%1000)%100)%10;
   
-  if(1000 <= num <= 9999)
-  {
-    anode = 0b0000000000000000;
-    teste = anode;
-    //return teste;
+  if(cathode1 != 0){
+    num1 = num1 | anode1;
+    num1 = num1 << 4;
+    num1 = num1 | cathode1;
   }
-  if(100 <= num <= 999){
-    anode = 0b0000100000000000;
-    //return anode;
+  else
+    num1 = 0;
+  if(cathode2 != 0){
+    num2 = num2 | anode2;
+    num2 = num2 << 4;
+    num2 = num2 | cathode2;
   }
-  if(10 <= num <= 99){
-    anode = 0b0000110000000000;
+  else
+    num2 = 0;
+  if(cathode3 != 0){
+    num3 = num3 | anode3;
+    num3 = num3 << 4;
+    num3 = num3 | cathode3;
   }
-  if(0 <= num <= 9){
-    anode = 0b0000111000000000;
+  else
+    num3 = 0;
+  if(cathode4 != 0){
+    num4 = num4 | anode4;
+    num4 = num4 << 4;
+    num4 = num4 | cathode4;
   }
-  else{
-    anode = 0b0000111100000000;
-  }
-  
+  else
+    num4 = 0;
+  printf("chomi  %d \n", num1);
+  printf("chomi  %d \n", num2);
+  printf("chomi  %d \n", num3);
+  printf("chomi  %d \n", num4);
+
+  value = value | num1;
+  value = value << 8;
+  value = value | num2;
+  value = value << 8;
+  value = value | num3;
+  value = value << 8;
+  value = value | num4;
+  return value;
 }
 
 int main()
 {
 
-  int valor;
+  int valor, value;
 
   //init uart
   uart_init(UART_BASE,FREQ/BAUD);
@@ -91,16 +116,15 @@ int main()
   printf("Value of Pi = %f\n\n", 3.1415);
 
 //  scanf("%d", &valor);
-	valor = 2190;
+	valor = 5482;
 
-  valor =  Detect_Number(valor);
+  value =  Detect_Number(valor);
  
   gpio_set_output_enable(valor);
 
   gpio_set(1);
 
-  printf("valor ==== %d\n", valor);
-
+  printf("valor ==== %d\n", value);
 
   uart_finish();
 }
