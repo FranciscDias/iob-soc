@@ -42,34 +42,63 @@ int compare_str(char *str1, char *str2, int str_size) {
 }
 
 
-int Detect_Number(int num){
+void Detect_Number(int num, int vetor[]){
 
-  int cathode1, cathode2, cathode3, cathode4, teste;
+  int cathode[4], teste;
 
-  uint16_t anode;
-  cathode1 = num/1000;
-  cathode2 = (num%1000)/100;
-  cathode3 = ((num%1000)%100)/10;
-  cathode4 = ((num%1000)%100)%10;
+  uint32_t anode;
+
+  for(int i=0; i<4; i++){
+  cathode[i]=0;
+  }
+
+  cathode[0] = num/1000;
+  cathode[1] = (num%1000)/100;
+  cathode[2] = ((num%1000)%100)/10;
+  cathode[3] = ((num%1000)%100)%10;
   
-  if(1000 <= num <= 9999)
+  if(1000 <= num && num <= 9999)
   {
-    anode = 0b0000000000000000;
-    teste = anode;
-    //return teste;
+    anode = 0b00000000000000000000000000000000;
+    vetor[0] = anode|cathode[0];
+    anode = 0b00000000000000000000000000000000;
+    printf("vetor 0 = %d\n", vetor[0]);
+    anode = 0b00001000000000000000000000000000;
+    vetor[1] = anode|cathode[1];
+    anode = 0b00000000000000000000000000000000;
+    printf("vetor 1 = %d\n", vetor[1]);
+    anode = 0b00001100000000000000000000000000;
+    vetor[2] = anode|cathode[2];
+    anode = 0b00000000000000000000000000000000;
+    printf("vetor 2 = %d\n", vetor[2]);
+    anode = 0b00001110000000000000000000000000;
+    vetor[3] = anode|cathode[3];
+    anode = 0b00000000000000000000000000000000;
+    printf("vetor 3 = %d\n", vetor[3]);
+    return;
   }
-  if(100 <= num <= 999){
-    anode = 0b0000100000000000;
-    //return anode;
+  if(100 <= num && num <= 999){
+    anode = 0b00001000000000000000000000000000;
+    vetor[1] = anode|cathode[1];
+    anode = 0b00001100000000000000000000000000;
+    vetor[2] = anode|cathode[2];
+    anode = 0b00001110000000000000000000000000;
+    vetor[3] = anode|cathode[3];
+    return;
   }
-  if(10 <= num <= 99){
-    anode = 0b0000110000000000;
+  if(10 <= num && num <= 99){
+    anode = 0b00001100000000000000000000000000;
+    teste = anode|cathode[1];
+    return;
   }
-  if(0 <= num <= 9){
-    anode = 0b0000111000000000;
+  if(0 <= num && num <= 9){
+    anode = 0b00001110000000000000000000000000;
+    teste = anode|cathode[1];
+    return;
   }
   else{
-    anode = 0b0000111100000000;
+    teste = 0b00001111000000000000000000000000;
+    return;
   }
   
 }
@@ -77,7 +106,7 @@ int Detect_Number(int num){
 int main()
 {
 
-  int valor;
+  int valor, vetor[4];
 
   //init uart
   uart_init(UART_BASE,FREQ/BAUD);
@@ -93,13 +122,13 @@ int main()
 //  scanf("%d", &valor);
 	valor = 2190;
 
-  valor =  Detect_Number(valor);
+  Detect_Number(valor, vetor);
  
   gpio_set_output_enable(valor);
 
   gpio_set(1);
 
-  printf("valor ==== %d\n", valor);
+  printf("valor ==== %d%d%d%d\n", vetor[0], vetor[1], vetor[2], vetor[3]);
 
 
   uart_finish();
