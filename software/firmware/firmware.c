@@ -44,7 +44,7 @@ int compare_str(char *str1, char *str2, int str_size) {
 
 void Detect_Number(int num, int vetor[]){
 
-<<<<<<< HEAD
+
   int cathode[4], teste;
 
   uint32_t anode;
@@ -102,7 +102,6 @@ void Detect_Number(int num, int vetor[]){
     return;
   }
   
-=======
   int cathode1, cathode2, cathode3, cathode4, anode1, anode2, anode3, anode4, num1, num2, num3, num4, value;
   //1- numero mais a esquerda... 4- numero mais a direita
 
@@ -155,18 +154,13 @@ void Detect_Number(int num, int vetor[]){
   value = value | num3;
   value = value << 8;
   value = value | num4;
-  return value;
->>>>>>> f65ed0f845a37fc71a19a59afa610f08207be75f
 }
 
 int main()
 {
 
-<<<<<<< HEAD
   int valor, vetor[4];
-=======
-  int valor, value;
->>>>>>> f65ed0f845a37fc71a19a59afa610f08207be75f
+  // int valor, value;
 
   //init uart
   uart_init(UART_BASE,FREQ/BAUD);
@@ -182,22 +176,17 @@ int main()
 //  scanf("%d", &valor);
 	valor = 5482;
 
-<<<<<<< HEAD
   Detect_Number(valor, vetor);
-=======
-  value =  Detect_Number(valor);
->>>>>>> f65ed0f845a37fc71a19a59afa610f08207be75f
+
+  //  value =  Detect_Number(valor);
  
   gpio_set_output_enable(valor);
 
   gpio_set(1);
 
-<<<<<<< HEAD
   printf("valor ==== %d%d%d%d\n", vetor[0], vetor[1], vetor[2], vetor[3]);
 
-=======
-  printf("valor ==== %d\n", value);
->>>>>>> f65ed0f845a37fc71a19a59afa610f08207be75f
+  // printf("valor ==== %d\n", value);
 
   uart_finish();
 }
