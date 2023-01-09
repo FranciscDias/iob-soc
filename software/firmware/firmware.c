@@ -44,35 +44,65 @@ int compare_str(char *str1, char *str2, int str_size) {
 
 int Detect_Number(int num){
 
-  int cathode1, cathode2, cathode3, cathode4, anode1, anode2, anode3, anode4, num1, num2, num3, num4, value;
+  int cathode[4], global, anode1, anode2, anode3, anode4, num1, num2, num3, num4, value;
   //1- numero mais a esquerda... 4- numero mais a direita
 
   anode1 = 0b0000;
   anode2 = 0b1000;
   anode3 = 0b1100;
   anode4 = 0b1110;
-  cathode1 = num/1000;
-  cathode2 = (num%1000)/100;
-  cathode3 = ((num%1000)%100)/10;
-  cathode4 = ((num%1000)%100)%10;
-  
-  if(cathode1 != 0){
+  cathode[0] = num/1000;
+  cathode[1] = (num%1000)/100;
+  cathode[2] = ((num%1000)%100)/10;
+  cathode[3] = ((num%1000)%100)%10;
+
+  printf("before ==============> %d%d%d%d\n", cathode[0], cathode[1], cathode[2], cathode[3]);
+
+  for(int i=0; i<4; i++){
+    if(cathode[i]==0)
+       cathode[i] = 1;
+    if(cathode[i]==1)
+      cathode[i] = 79;
+    if(cathode[i]==2)
+      cathode[i] = 18;
+    if(cathode[i]==3)
+      cathode[i] = 6;
+    if(cathode[i]==4)
+      cathode[i] = 76;
+    if(cathode[i]==5)
+      cathode[i] = 36;
+    if(cathode[i]==6)
+      cathode[i] = 32;
+    if(cathode[i]==7)
+      cathode[i] = 15;
+    if(cathode[i]==8)
+      cathode[i] = 0;
+    if(cathode[i]==9)
+      cathode[i] = 4;
+  }
+
+  printf("Valor=============> %d%d%d%d\n", cathode[0], cathode[1], cathode[2], cathode[3]);
+
+  global = cathode[0] << 24 | cathode[1] << 16 | cathode[2] << 8 | cathode[3];
+
+  printf("global variable=======>%d", global);
+  /* if(cathode1 != 0){
     num1 = num1 | anode1;
-    num1 = num1 << 4;
+    num1 = num1 << 26;
     num1 = num1 | cathode1;
   }
   else
     num1 = 0;
   if(cathode2 != 0){
     num2 = num2 | anode2;
-    num2 = num2 << 4;
+    num2 = num2 << 18;
     num2 = num2 | cathode2;
   }
   else
     num2 = 0;
   if(cathode3 != 0){
     num3 = num3 | anode3;
-    num3 = num3 << 4;
+    num3 = num3 << 10;
     num3 = num3 | cathode3;
   }
   else
@@ -95,7 +125,7 @@ int Detect_Number(int num){
   value = value << 8;
   value = value | num3;
   value = value << 8;
-  value = value | num4;
+  value = value | num4;*/
 }
 
 int main()
