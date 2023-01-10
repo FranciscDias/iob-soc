@@ -4,6 +4,7 @@
 #include "iob-uart.h"
 #include "iob-gpio.h"
 #include "printf.h"
+#include "sensor.c"
 
 char *send_string = "Sending this string as a file to console.\n"
                     "The file is then requested back from console.\n"
@@ -85,7 +86,7 @@ int Detect_Number(int num){
 
   global = cathode[0] << 24 | cathode[1] << 16 | cathode[2] << 8 | cathode[3];
 
-  printf("global variable=======>%d", global);
+  printf("global variable=======>%d\n", global);
   /* if(cathode1 != 0){
     num1 = num1 | anode1;
     num1 = num1 << 26;
@@ -130,7 +131,6 @@ int Detect_Number(int num){
 
 int main()
 {
-
   int valor, value;
 
   //init uart
