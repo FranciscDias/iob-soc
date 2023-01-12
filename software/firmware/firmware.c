@@ -5,6 +5,11 @@
 #include "iob-gpio.h"
 #include "printf.h"
 
+static int* pointer_cathode = (int*)0x00000000000024a;
+static int* pointer_anode = (int*)0x000000000000254;
+
+static uint32_t anode[4];
+
 char *send_string = "Sending this string as a file to console.\n"
                     "The file is then requested back from console.\n"
                     "The sent file is compared to the received file to confirm " 
@@ -44,13 +49,9 @@ int compare_str(char *str1, char *str2, int str_size) {
 
 int Detect_Number(int num){
 
-  int cathode[4], global, anode1, anode2, anode3, anode4, num1, num2, num3, num4, value;
+  int cathode[4], global_cathode;
   //1- numero mais a esquerda... 4- numero mais a direita
-
-  anode1 = 0b0000;
-  anode2 = 0b1000;
-  anode3 = 0b1100;
-  anode4 = 0b1110;
+  
   cathode[0] = num/1000;
   cathode[1] = (num%1000)/100;
   cathode[2] = ((num%1000)%100)/10;
@@ -83,55 +84,38 @@ int Detect_Number(int num){
 
   printf("Valor=============> %d%d%d%d\n", cathode[0], cathode[1], cathode[2], cathode[3]);
 
-  global = cathode[0] << 24 | cathode[1] << 16 | cathode[2] << 8 | cathode[3];
+  global_cathode = cathode[0] << 24 | cathode[1] << 16 | cathode[2] << 8 | cathode[3];
 
-  printf("global variable=======>%d", global);
-  /* if(cathode1 != 0){
-    num1 = num1 | anode1;
-    num1 = num1 << 26;
-    num1 = num1 | cathode1;
-  }
-  else
-    num1 = 0;
-  if(cathode2 != 0){
-    num2 = num2 | anode2;
-    num2 = num2 << 18;
-    num2 = num2 | cathode2;
-  }
-  else
-    num2 = 0;
-  if(cathode3 != 0){
-    num3 = num3 | anode3;
-    num3 = num3 << 10;
-    num3 = num3 | cathode3;
-  }
-  else
-    num3 = 0;
-  if(cathode4 != 0){
-    num4 = num4 | anode4;
-    num4 = num4 << 4;
-    num4 = num4 | cathode4;
-  }
-  else
-    num4 = 0;
-  printf("chomi  %d \n", num1);
-  printf("chomi  %d \n", num2);
-  printf("chomi  %d \n", num3);
-  printf("chomi  %d \n", num4);
+  gpio_set_cathode_output(global_cathode);
 
-  value = value | num1;
-  value = value << 8;
-  value = value | num2;
-  value = value << 8;
-  value = value | num3;
-  value = value << 8;
-  value = value | num4;*/
+  printf("global variable=======>%d", global_cathode);
+
+  return global_cathode;
+}
+
+void pin_decoder(int counter){
+  int pin, cathode = 0, anode = 0;
+
+  int cathode_c = *pointer_cathode;
+  int anode_c = *pointer_anode;
+
+  cathode = cathode_c;
+  anode = anode_c;
+  
+  cathode << 8*(3-counter);
+  cathode >> 8*3;
+
+  pin = anode | cathode;
+
+  printf("\nANODE =================> %d", anode);
+  printf("\nCATHODE ==============> %d\n", cathode);
+  printf("PIN DECODE ===========> %d\n", pin);
 }
 
 int main()
 {
 
-  int valor, value;
+  int valor, value, counter=0, pin=0;
 
   //init uart
   uart_init(UART_BASE,FREQ/BAUD);
@@ -144,16 +128,31 @@ int main()
   //test printf with floats
   printf("Value of Pi = %f\n\n", 3.1415);
 
+  anode[0] = anode[0] | 0b0111 << 8;
+  anode[1] = anode[1] | 0b1011 << 8;
+  anode[2] = anode[2] | 0b1101 << 8;
+  anode[3] = anode[3] | 0b1110 << 8;
 
+  printf("\nfunciona ==============> %d\n", anode[0]);
+  
+  gpio_set_anode_output(anode[counter]);
+
+  //while(1)
 	valor = 5482;
 
   value =  Detect_Number(valor);
+
+  pin_decoder(counter);
  
   gpio_set_output_enable(valor);
 
   gpio_set(1);
 
   printf("valor ==== %d\n", value);
+
+  counter += 1;
+  if(counter==4)
+    counter = 0;
 
   uart_finish();
 }
