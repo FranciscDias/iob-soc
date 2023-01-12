@@ -4,10 +4,10 @@
 #include "iob-uart.h"
 #include "iob-gpio.h"
 #include "printf.h"
-#include "sensor.c"
+//#include "sensor.h"
 
-static int* pointer_cathode = (int*)0x00000000000024a;
-static int* pointer_anode = (int*)0x000000000000254;
+//static int* pointer_cathode = (int*)0x00000000000024a;
+//static int* pointer_anode = (int*)0x000000000000254;
 
 static uint32_t anode[4];
 
@@ -87,24 +87,18 @@ int Detect_Number(int num){
 
   global_cathode = cathode[0] << 24 | cathode[1] << 16 | cathode[2] << 8 | cathode[3];
 
-  gpio_set_cathode_output(global_cathode);
-
   printf("global variable=======>%d", global_cathode);
 
   return global_cathode;
 }
 
-void pin_decoder(int counter){
-  int pin, cathode = 0, anode = 0;
+void pin_decoder(int anode, int cathode,  int counter){
+  int pin;
 
-  int cathode_c = *pointer_cathode;
-  int anode_c = *pointer_anode;
-
-  cathode = cathode_c;
-  anode = anode_c;
+  printf("\nbefore ===================> %d", cathode);
   
-  cathode << 8*(3-counter);
-  cathode >> 8*3;
+  cathode = cathode << 8*counter;
+  cathode =  cathode >> 8*3;
 
   pin = anode | cathode;
 
@@ -115,7 +109,6 @@ void pin_decoder(int counter){
 
 int main()
 {
-
   int valor, value, counter=0, pin=0;
 
   //init uart
@@ -135,25 +128,30 @@ int main()
   anode[3] = anode[3] | 0b1110 << 8;
 
   printf("\nfunciona ==============> %d\n", anode[0]);
+
+    valor = 5482;
+
+    value =  Detect_Number(valor);
+
+    printf("\nVALUE ============> %d", value);
+
+   while(counter < 4){
   
-  gpio_set_anode_output(anode[counter]);
-
-  //while(1)
-	valor = 5482;
-
-  value =  Detect_Number(valor);
-
-  pin_decoder(counter);
+    pin_decoder(anode[counter], value, counter);
  
-  gpio_set_output_enable(valor);
+    gpio_set_output_enable(value);
 
-  gpio_set(1);
+    gpio_set(1);
 
-  printf("valor ==== %d\n", value);
+    printf("valor ==== %d\n", value);
 
-  counter += 1;
-  if(counter==4)
-    counter = 0;
+    counter += 1;
+    if(counter==5)
+      counter = 0;
+
+  }
 
   uart_finish();
+
+  return 0;
 }
