@@ -144,7 +144,7 @@ int main()
   //test printf with floats
   printf("Value of Pi = %f\n\n", 3.1415);
 
-
+  trigger_output(1);
 	valor = 5482;
 
   value =  Detect_Number(valor);
