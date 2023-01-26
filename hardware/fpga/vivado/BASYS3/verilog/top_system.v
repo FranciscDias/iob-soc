@@ -2,15 +2,15 @@
 `include "system.vh"
 
 module top_system(
-	          input         clk,
-	          input         reset,
+	          input     clk,
+	          input     reset,
 
 	          //uart
-	          output        uart_txd,
-	          input         uart_rxd,
+	          output    uart_txd,
+	          input     uart_rxd,
 		  //gpio
-		  output	CA[7:0],
-		  output	AN[3:0]
+		  output [7:0] PIN,
+		  output [3:0]  AN
 		  );
 
    //
@@ -52,8 +52,8 @@ module top_system(
       .uart_cts      (1'b1),
 
       //GPIO
-      .CA            (CA),
-      .AN	     (AN)    
+      .PIN           (PIN),
+      .AN            (AN)
       );
 
 endmodule

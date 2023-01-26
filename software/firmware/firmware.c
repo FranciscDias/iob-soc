@@ -9,7 +9,7 @@
 //static int* pointer_cathode = (int*)0x00000000000024a;
 //static int* pointer_anode = (int*)0x000000000000254;
 
-static uint32_t anode[4];
+static uint8_t anode[4];
 
 char *send_string = "Sending this string as a file to console.\n"
                     "The file is then requested back from console.\n"
@@ -58,11 +58,11 @@ int Detect_Number(int num){
   cathode[2] = ((num%1000)%100)/10;
   cathode[3] = ((num%1000)%100)%10;
 
-  printf("before ==============> %d%d%d%d\n", cathode[0], cathode[1], cathode[2], cathode[3]);
+//  printf("before ==============> %d%d%d%d\n", cathode[0], cathode[1], cathode[2], cathode[3]);
 
   for(int i=0; i<4; i++){
     if(cathode[i]==0)
-       cathode[i] = 1;
+       cathode[i] = 2;
     if(cathode[i]==1)
       cathode[i] = 79;
     if(cathode[i]==2)
@@ -83,34 +83,35 @@ int Detect_Number(int num){
       cathode[i] = 4;
   }
 
-  printf("Valor=============> %d%d%d%d\n", cathode[0], cathode[1], cathode[2], cathode[3]);
+//  printf("Valor=============> %d%d%d%d\n", cathode[0], cathode[1], cathode[2], cathode[3]);
 
   global_cathode = cathode[0] << 24 | cathode[1] << 16 | cathode[2] << 8 | cathode[3];
 
-  printf("global variable=======>%d", global_cathode);
+//  printf("global variable=======>%d", global_cathode);
 
   return global_cathode;
 }
 
-void pin_decoder(int anode, int cathode,  int counter){
+int pin_decoder(int anode, int cathode,  int counter){
   int pin;
 
-  printf("\nbefore ===================> %d", cathode);
+//  printf("\nbefore ===================> %d", cathode);
   
   cathode = cathode << 8*counter;
-  cathode =  cathode >> 8*3;
+  cathode = cathode >> 8*3;
 
-  pin = anode | cathode;
-
-  printf("\nANODE =================> %d", anode);
-  printf("\nCATHODE ==============> %d\n", cathode);
-  printf("PIN DECODE ===========> %d\n", pin);
+  // pin = anode | cathode;
+  
+//  printf("\nANODE =================> %d", anode);
+//  printf("\nCATHODE ==============> %d\n", cathode);
+//  printf("PIN DECODE ===========> %d\n", pin);
+  return cathode;
 }
 
 int main()
 {
   int valor, value, counter=0, pin=0;
-
+  static int ramocas=0b0000 << 8;
   //init uart
   uart_init(UART_BASE,FREQ/BAUD);
 
@@ -121,36 +122,60 @@ int main()
 
   //test printf with floats
   printf("Value of Pi = %f\n\n", 3.1415);
+  /*
+  anode[3] = anode[3] | 0b1000 << 8;
+  anode[2] = anode[2] | 0b0100 << 8;
+  anode[1] = anode[1] | 0b0010 << 8;
+  anode[0] = anode[0] | 0b0001 << 8;
+*/
 
-  anode[0] = anode[0] | 0b0111 << 8;
-  anode[1] = anode[1] | 0b1011 << 8;
-  anode[2] = anode[2] | 0b1101 << 8;
-  anode[3] = anode[3] | 0b1110 << 8;
+  anode[0] |= 0b0111;
+  anode[1] |= 0b1011;
+  anode[2] |= 0b1101;
+  anode[3] |= 0b1110;
+  
 
-  printf("\nfunciona ==============> %d\n", anode[0]);
+//  printf("\nfunciona ==============> %d\n", anode[0]);
 
-    valor = 5482;
+    valor = 8080;
 
     value =  Detect_Number(valor);
 
-    printf("\nVALUE ============> %d", value);
+    //   printf("\nVALUE ============> %d", value);
 
-   while(counter < 4){
+    while(counter < 5){
   
-    pin_decoder(anode[counter], value, counter);
- 
-    gpio_set_output_enable(value);
+    pin = pin_decoder(anode[counter], value, counter);
+
+    gpio_set_anode_output(anode[counter]);
+
+    gpio_set(1);
+    
+    gpio_set_output_enable(pin);
 
     gpio_set(1);
 
-    printf("valor ==== %d\n", value);
+    // pin = pin & ramocas;
+
+    // gpio_set_output_enable(pin);
+    // gpio_set(1);
+
+    printf("valor ==== %d\n", pin);
 
     counter += 1;
-    if(counter==5)
-      counter = 0;
+      if(counter==4)
+        counter = 0;
 
-  }
-
+    }
+    // counter = 0;
+    /*
+    gpio_set_anode_output(15);
+    gpio_set(1);
+    gpio_set_output_enable(36);
+    gpio_set(1);
+    gpio_set_anode_output(0);
+    gpio_set(1);*/
+    
   uart_finish();
 
   return 0;
