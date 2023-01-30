@@ -61,33 +61,33 @@ int Detect_Number(int num){
 //  printf("before ==============> %d%d%d%d\n", cathode[0], cathode[1], cathode[2], cathode[3]);
 
   for(int i=0; i<4; i++){
-    if(cathode[i]==0)
-       cathode[i] = 2;
-    if(cathode[i]==1)
-      cathode[i] = 79;
-    if(cathode[i]==2)
-      cathode[i] = 18;
-    if(cathode[i]==3)
-      cathode[i] = 6;
-    if(cathode[i]==4)
-      cathode[i] = 76;
-    if(cathode[i]==5)
+    if(cathode[i]==0)//1
+       cathode[i] = 64;
+    else if(cathode[i]==1)//79-158
+      cathode[i] = 121;
+    else if(cathode[i]==2)//18-36
       cathode[i] = 36;
-    if(cathode[i]==6)
-      cathode[i] = 32;
-    if(cathode[i]==7)
-      cathode[i] = 15;
-    if(cathode[i]==8)
+    else if(cathode[i]==3)//6-12
+      cathode[i] = 48;
+    else if(cathode[i]==4)//76-152
+      cathode[i] = 25;
+    else if(cathode[i]==5)//36-72
+      cathode[i] = 18;
+    else if(cathode[i]==6)//32-64
+      cathode[i] = 2;
+    else if(cathode[i]==7)//15-30
+      cathode[i] = 120;
+    else if(cathode[i]==8)
       cathode[i] = 0;
-    if(cathode[i]==9)
-      cathode[i] = 4;
+    else  if(cathode[i]==9)//4-8
+      cathode[i] = 16;
   }
 
-//  printf("Valor=============> %d%d%d%d\n", cathode[0], cathode[1], cathode[2], cathode[3]);
+  //printf("Valor=============> %d%d%d%d\n", cathode[0], cathode[1], cathode[2], cathode[3]);
 
   global_cathode = cathode[0] << 24 | cathode[1] << 16 | cathode[2] << 8 | cathode[3];
 
-//  printf("global variable=======>%d", global_cathode);
+  //printf("global variable=======>%d\n", global_cathode);
 
   return global_cathode;
 }
@@ -110,8 +110,8 @@ int pin_decoder(int anode, int cathode,  int counter){
 
 int main()
 {
-  int valor, value, counter=0, pin=0;
-  static int ramocas=0b0000 << 8;
+  int valor, value, counter=0, pin=0, button=0;
+  
   //init uart
   uart_init(UART_BASE,FREQ/BAUD);
 
@@ -137,35 +137,39 @@ int main()
 
 //  printf("\nfunciona ==============> %d\n", anode[0]);
 
-    valor = 8080;
+    valor = 789;
 
     value =  Detect_Number(valor);
 
     //   printf("\nVALUE ============> %d", value);
 
     while(counter < 5){
-  
-    pin = pin_decoder(anode[counter], value, counter);
+      pin = pin_decoder(anode[counter], value, counter);
 
-    gpio_set_anode_output(anode[counter]);
+      // pin = pin - counter;
+      
+      gpio_set_anode_output(anode[counter]);
 
-    gpio_set(1);
+      gpio_set(1);
     
-    gpio_set_output_enable(pin);
+      gpio_set_output_enable(pin);
 
-    gpio_set(1);
+      gpio_set(1);
 
-    // pin = pin & ramocas;
+      // gpio_set_output_enable(pin);
+      // gpio_set(1);
 
-    // gpio_set_output_enable(pin);
-    // gpio_set(1);
+      printf("valor ==== %d\n", pin);
 
-    printf("valor ==== %d\n", pin);
-
-    counter += 1;
-      if(counter==4)
+      counter += 1;
+      if(counter==4){
         counter = 0;
+	valor  = valor - 1;
+	value =  Detect_Number(valor);
+      }
 
+      if((button = gpio_button_get())==1)
+	break;
     }
     // counter = 0;
     /*
