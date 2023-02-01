@@ -105,25 +105,25 @@ int Detect_Number(int num){
 
   for(int i=0; i<4; i++){
     if(cathode[i]==0)//1
-       cathode[i] = 64;
+       cathode[i] = 192;
     else if(cathode[i]==1)//79-158
-      cathode[i] = 121;
+      cathode[i] = 249;
     else if(cathode[i]==2)//18-36
-      cathode[i] = 36;
+      cathode[i] = 164;
     else if(cathode[i]==3)//6-12
-      cathode[i] = 48;
+      cathode[i] = 176;
     else if(cathode[i]==4)//76-152
-      cathode[i] = 25;
+      cathode[i] = 153;
     else if(cathode[i]==5)//36-72
-      cathode[i] = 18;
+      cathode[i] = 146;
     else if(cathode[i]==6)//32-64
-      cathode[i] = 2;
+      cathode[i] = 130;
     else if(cathode[i]==7)//15-30
-      cathode[i] = 120;
+      cathode[i] = 248;
     else if(cathode[i]==8)
-      cathode[i] = 0;
+      cathode[i] = 128;
     else  if(cathode[i]==9)//4-8
-      cathode[i] = 16;
+      cathode[i] = 144;
   }
 
   //printf("Valor=============> %d%d%d%d\n", cathode[0], cathode[1], cathode[2], cathode[3]);
@@ -168,23 +168,12 @@ int main()
 
   //test printf with floats
   printf("Value of Pi = %f\n\n", 3.1415);
-  /*
-  anode[3] = anode[3] | 0b1000 << 8;
-  anode[2] = anode[2] | 0b0100 << 8;
-  anode[1] = anode[1] | 0b0010 << 8;
-  anode[0] = anode[0] | 0b0001 << 8;
-*/
 
   anode[0] |= 0b0111;
   anode[1] |= 0b1011;
   anode[2] |= 0b1101;
   anode[3] |= 0b1110;
   
-
-//  printf("\nfunciona ==============> %d\n", anode[0]);
-
-
-
    distance =  trig();
    printf("Distance  ============> %d \n", distance);
    // valor = 5789;
@@ -192,45 +181,25 @@ int main()
    value =  Detect_Number(distance);
 
    while(counter < 5){
-
-      
-     //  trig();
-     //gpio_set(1);
-
-     // printf("get_jump ==========> %d \n", get_jump);
+     gpio_set_anode_output(15);
+     gpio_set_output_enable(255);
+     gpio_set(1);
      
       pin = pin_decoder(anode[counter], value, counter);
 
-      // pin = pin - counter;
-      
       gpio_set_anode_output(anode[counter]);
-
-      // gpio_set(1);
-    
+      
       gpio_set_output_enable(pin);
-
-      // gpio_set(1);
-
-      //printf("valor ==== %d\n", pin);
+      gpio_set(1);
 
       counter += 1;
       if(counter==4){
         counter = 0;
-	//	valor  = valor - 1;
-	//	value =  Detect_Number(valor);
       }
 
       if((button = gpio_button_get())==1)
 	break;
     }
-    // counter = 0;
-    /*
-    gpio_set_anode_output(15);
-    gpio_set(1);
-    gpio_set_output_enable(36);
-    gpio_set(1);
-    gpio_set_anode_output(0);
-    gpio_set(1);*/
     
   uart_finish();
 
