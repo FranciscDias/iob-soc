@@ -3,6 +3,7 @@
 #include "periphs.h"
 #include "iob-uart.h"
 #include "iob-gpio.h"
+#include "iob-timer.h"
 #include "printf.h"
 //#include "sensor.h"
 
@@ -47,6 +48,48 @@ int compare_str(char *str1, char *str2, int str_size) {
     return 0;
 }
 
+
+int trig(void){
+  unsigned long long elapsed, elapsed_end, time;
+  unsigned int elapsedu;
+  unsigned int elapsed_aux = 0;
+  int get_jump = 0, distance = 0;
+  
+  elapsed = timer_get_count();
+  
+  elapsedu = timer_time_us();
+
+  gpio_set_jump_output(1);
+  
+  while(elapsed_aux < 10){
+    elapsed_aux = elapsedu - timer_time_us();
+    }
+  gpio_set_jump_output(0);
+  
+  //elapsed = timer_get_count();
+  elapsed = timer_time_us();
+  get_jump = gpio_jump_get();
+  
+  while(get_jump != 1){
+    printf("get_jum === %d \n", get_jump);
+    get_jump = gpio_jump_get();
+  }
+  while(get_jump == 1){
+    get_jump = gpio_jump_get();
+    printf("jump\n");
+  }
+  // elapsed_end = timer_get_count();
+  elapsed_end = timer_time_us();
+  time = elapsed_end - elapsed;
+
+  distance = time/58;
+  distance = distance/2;
+  printf("Time1  ============> %lld \n", time);
+  printf("Elapsed  ============> %lld \n", elapsed);
+  printf("Elapsed_end  ============> %lld  \n", elapsed_end);
+  return distance;
+
+}
 
 int Detect_Number(int num){
 
@@ -109,14 +152,17 @@ int pin_decoder(int anode, int cathode,  int counter){
 }
 
 int main()
-{
-  int valor, value, counter=0, pin=0, button=0;
-  
+{  
+  int valor, value, counter=0, pin=0, button=0, get_jump = 0, distance = 0;
   //init uart
   uart_init(UART_BASE,FREQ/BAUD);
 
+  //gpio init
   gpio_init(GPIO_BASE);
 
+  //timer init
+  timer_init(TIMER_BASE);
+  
   //test puts
   uart_puts("\n\n\nHello world!\n\n\n");
 
@@ -137,35 +183,41 @@ int main()
 
 //  printf("\nfunciona ==============> %d\n", anode[0]);
 
-    valor = 789;
 
-    value =  Detect_Number(valor);
 
-    //   printf("\nVALUE ============> %d", value);
+   distance =  trig();
+   printf("Distance  ============> %d \n", distance);
+   // valor = 5789;
 
-    while(counter < 5){
+   value =  Detect_Number(distance);
+
+   while(counter < 5){
+
+      
+     //  trig();
+     //gpio_set(1);
+
+     // printf("get_jump ==========> %d \n", get_jump);
+     
       pin = pin_decoder(anode[counter], value, counter);
 
       // pin = pin - counter;
       
       gpio_set_anode_output(anode[counter]);
 
-      gpio_set(1);
+      // gpio_set(1);
     
       gpio_set_output_enable(pin);
 
-      gpio_set(1);
-
-      // gpio_set_output_enable(pin);
       // gpio_set(1);
 
-      printf("valor ==== %d\n", pin);
+      //printf("valor ==== %d\n", pin);
 
       counter += 1;
       if(counter==4){
         counter = 0;
-	valor  = valor - 1;
-	value =  Detect_Number(valor);
+	//	valor  = valor - 1;
+	//	value =  Detect_Number(valor);
       }
 
       if((button = gpio_button_get())==1)

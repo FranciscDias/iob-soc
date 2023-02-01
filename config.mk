@@ -36,7 +36,7 @@ INIT_MEM ?=1
 #PERIPHERAL LIST
 #must match respective submodule CORE_NAME in the core.mk file of the submodule
 #PERIPHERALS:=UART
-PERIPHERALS ?=UART GPIO
+PERIPHERALS ?=UART GPIO TIMER
 
 #RISC-V HARD MULTIPLIER AND DIVIDER INSTRUCTIONS
 USE_MUL_DIV ?=1
@@ -64,6 +64,7 @@ DOC ?= pb
 #IOB LIBRARY
 UART_HW_DIR:=$(UART_DIR)/hardware
 GPIO_HW_DIR:=$(GPIO_DIR)/hardware
+TIMER_HW_DIR:=$(TIMER_DIR)/hardware
 
 ####################################################################
 # DERIVED FROM PRIMARY PARAMETERS: DO NOT CHANGE BELOW THIS POINT
@@ -90,6 +91,7 @@ GPIO_DIR=$(ROOT_DIR)/submodules/GPIO
 LIB_DIR=$(ROOT_DIR)/submodules/LIB
 MEM_DIR=$(ROOT_DIR)/submodules/MEM
 AXI_DIR=$(ROOT_DIR)/submodules/AXI
+TIMER_DIR=$(ROOT_DIR)/submodules/TIMER
 
 #sw paths
 SW_DIR:=$(ROOT_DIR)/software
