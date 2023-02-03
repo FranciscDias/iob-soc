@@ -81,8 +81,8 @@ set_property IOSTANDARD LVCMOS33 [get_ports {AN[3]}]
 #Buttons
 
 #Bank = 14, Pin name = , Sch name = BTNU
-set_property PACKAGE_PIN T18 [get_ports {BTN}]
-set_property IOSTANDARD LVCMOS33 [get_ports {BTN}]
+set_property PACKAGE_PIN T18 [get_ports {BTN_1}]
+set_property IOSTANDARD LVCMOS33 [get_ports {BTN_1}]
 #Bank = 14, Pin name = , Sch name = BTNL
 #set_property PACKAGE_PIN W19 [get_ports {BTN[1]}]
 #set_property IOSTANDARD LVCMOS33 [get_ports {BTN[1]}]
@@ -90,11 +90,15 @@ set_property IOSTANDARD LVCMOS33 [get_ports {BTN}]
 #set_property PACKAGE_PIN T17 [get_ports {BTN[2]}]
 #set_property IOSTANDARD LVCMOS33 [get_ports {BTN[2]}]
 #Bank = 14, Pin name = , Sch name = BTND
-#set_property PACKAGE_PIN U17 [get_ports {BTN[3]}]
-#set_property IOSTANDARD LVCMOS33 [get_ports {BTN[3]}]
+set_property PACKAGE_PIN U17 [get_ports {BTN_2}]
+set_property IOSTANDARD LVCMOS33 [get_ports {BTN_2}]
 #Bank = 14, Pin name = , Sch name = BTNC
 #set_property PACKAGE_PIN U18 [get_ports {BTN[4]}]
 #set_property IOSTANDARD LVCMOS33 [get_ports {BTN[4]}]
+
+#SWITCH
+set_property PACKAGE_PIN R2 [get_ports {SWITCH}]
+set_property IOSTANDARD LVCMOS33 [get_ports {SWITCH}]
 
 #SENSOR
 

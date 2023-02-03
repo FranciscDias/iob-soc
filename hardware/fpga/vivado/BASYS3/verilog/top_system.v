@@ -10,7 +10,9 @@ module top_system(
 	          input        uart_rxd,
 		  //gpio
 		  input        JUMP_IN,
-		  input        BTN,
+		  input        BTN_1,
+		  input        BTN_2,
+		  input        SWITCH,       
 		  output       JUMP_OUT,
 		  output [7:0] PIN,
 		  output [3:0] AN
@@ -57,9 +59,11 @@ module top_system(
       //GPIO
       .JUMP_IN       (JUMP_IN),
       .JUMP_OUT      (JUMP_OUT),
-      .BTN           (BTN),
+      .BTN_1         (BTN_1),
+      .BTN_2         (BTN_2),
       .PIN           (PIN),
-      .AN            (AN)
+      .AN            (AN),
+      .SWITCH        (SWITCH)
       );
 
 endmodule
