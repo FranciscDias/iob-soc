@@ -62,19 +62,20 @@ int trig(void){
   
   elapsed = timer_time_us();
   get_jump = gpio_jump_get();
-  
+
   while(get_jump != 1){
     get_jump = gpio_jump_get();
   }
   while(get_jump == 1){
     get_jump = gpio_jump_get();
   }
-  
+
   elapsed_end = timer_time_us();
   time = elapsed_end - elapsed;
 
   distance = time/58;
   distance = distance/2;
+;
   return distance;
 }
 
@@ -125,10 +126,8 @@ int pin_decoder(int anode, int cathode,  int counter){
   
 }
 
-int on_off(int var){
+int on(){
   int pin = 0, i=0;
-
-  if(var==1){
     while(gpio_button1_get()==0){
       for(i=0; i<2; i++){
 	gpio_set_anode_output(15);
@@ -147,66 +146,11 @@ int on_off(int var){
 	gpio_set(1);
       }
     }
-  }
-    if(var==0){
-      for(i=0; i<3; i++){
-	gpio_set_anode_output(15);
-	gpio_set_output_enable(255);
-	gpio_set(1);
-	switch(i){
-        case 0:
-          pin = 192;
-	  break;
-	case 1:
-	  pin = 142;
-	  break;
-	case 2:
-	  pin = 142;
-	  break;  
-	}
-	gpio_set_anode_output(anode[i]);
-	gpio_set_output_enable(pin);
-	gpio_set(1);
-      }       
-    }
+    gpio_set_anode_output(15);
+    gpio_set_output_enable(255);
+    gpio_set(1);
   return 1;
 }
-
-void off(void){
-  int pin = 0, i=0;
-  unsigned int elapsed_s_before = 0, elapsed_s_after = 0, time = 0;
-  
-  elapsed_s_before = timer_time_s();
-  while(time < 3){
-    for(i=0; i<2; i++){
-      gpio_set_anode_output(15);
-      gpio_set_output_enable(255);
-      gpio_set(1);
-      switch(i){
-        case 0:
-          pin = 192;
-	  break;
-        case 1:
-	  pin = 142;
-	  break;
-	  //case 2:
-	  //pin = 142;
-	  //break;
-      }
-      gpio_set_anode_output(anode[i]);
-      gpio_set_output_enable(pin);
-      gpio_set(1);
-    }
-    elapsed_s_after = timer_time_s();
-    time = elapsed_s_after - elapsed_s_before;
-
-    printf("TIME  ============> %d \n", time);
-  }
-  gpio_set_anode_output(15);
-  gpio_set_output_enable(255);
-  gpio_set(1);
-}
-
 
 int main()
 {  
@@ -232,13 +176,11 @@ int main()
   anode[2] |= 0b1101;
   anode[3] |= 0b1110;
 
+  button1=on();
   
   while(gpio_switch_get()==1){
-    if(on_var==1){
-      button1=on_off(1);
-      on_var=0;
-    }
-    if((button1 = gpio_button1_get())==1){
+    if((button1=gpio_button1_get())==1){
+
       distance =  trig();
       printf("Distance  ============> %d \n", distance);
       value =  Detect_Number(distance);
@@ -271,21 +213,11 @@ int main()
         if((button2 = gpio_button2_get())==1 || gpio_switch_get()==0)
 	  break;  
       }
+      gpio_set_anode_output(15);
+      gpio_set_output_enable(255);
+      gpio_set(1);
     }
-  }  
-  gpio_set_anode_output(15);
-  gpio_set_output_enable(255);
-  gpio_set(1);  
-
-  elapsed_s_before = timer_time_s();
-  while(time < 3){
-    on_off(0);
-    printf("ANtes ============> %d \n", time);
-    elapsed_s_after = timer_time_s();
-    time = elapsed_s_after - elapsed_s_before;
-    printf("TIME  ============> %d \n", time);
-  }
-
+  } 
   gpio_set_anode_output(15);
   gpio_set_output_enable(255);
   gpio_set(1);
