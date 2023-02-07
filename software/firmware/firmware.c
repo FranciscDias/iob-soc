@@ -46,8 +46,7 @@ int compare_str(char *str1, char *str2, int str_size) {
 
 
 int trig(void){
-  unsigned long long elapsed, elapsed_end, time;
-  unsigned int elapsedu;
+  unsigned long long elapsed, elapsed_end, elapsedu, time;
   unsigned int elapsed_aux = 0;
   int get_jump = 0, distance = 0;
   
@@ -62,7 +61,7 @@ int trig(void){
   
   elapsed = timer_time_us();
   get_jump = gpio_jump_get();
-
+  
   while(get_jump != 1){
     get_jump = gpio_jump_get();
   }
@@ -72,10 +71,10 @@ int trig(void){
 
   elapsed_end = timer_time_us();
   time = elapsed_end - elapsed;
-
+  
   distance = time/58;
   distance = distance/2;
-;
+  
   return distance;
 }
 
@@ -169,7 +168,7 @@ int main()
   uart_puts("\n\n\nHello world!\n\n\n");
 
   //test printf with floats
-  printf("Value of Pi = %f\n\n", 3.1415);
+  printf("Press BTNU to start\n\n");
 
   anode[0] |= 0b0111;
   anode[1] |= 0b1011;
